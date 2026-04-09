@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>タイピング分析ツール</title>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #111;
+  color: #fff;
+  padding: 40px;
+}
+.box {
+  max-width: 600px;
+  margin: auto;
+}
+textarea {
+  width: 100%;
+  height: 100px;
+  font-size: 16px;
+}
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+}
+.result {
+  margin-top: 20px;
+  padding: 20px;
+  background: #222;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h1>⌨️ タイピング分析ツール</h1>
+
+  <p id="text"></p>
+
+  <textarea id="input" placeholder="ここに入力..."></textarea><br>
+
+  <button onclick="startTest()">スタート</button>
+  <button onclick="endTest()">終了</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+const sampleText = "プログラミングは継続が大切です";
+
+let startTime = 0;
+
+document.getElementById("text").innerText = sampleText;
+
+function startTest() {
+  document.getElementById("input").value = "";
+  document.getElementById("result").innerHTML = "";
+  startTime = new Date().getTime();
+}
+
+function endTest() {
+  const endTime = new Date().getTime();
+  const time = (endTime - startTime) / 1000;
+
+  const input = document.getElementById("input").value;
+
+  let correct = 0;
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === sampleText[i]) {
+      correct++;
+    }
+  }
+
+  const accuracy = (correct / sampleText.length) * 100;
+  const kps = input.length / time;
+
+  let rank = "";
+  if (kps > 6) rank = "S";
+  else if (kps > 4) rank = "A";
+  else if (kps > 2) rank = "B";
+  else rank = "C";
+
+  let advice = "";
+  if (accuracy < 90) {
+    advice = "👉 正確率を意識しましょう";
+  } else if (kps < 4) {
+    advice = "👉 毎日3分練習しましょう";
+  } else {
+    advice = "👉 とても良いです！";
+  }
+
+  document.getElementById("result").innerHTML = `
+    ⏱ 時間: ${time.toFixed(2)} 秒<br>
+    ⚡ 速度: ${kps.toFixed(2)} 打鍵/秒<br>
+    🎯 正確率: ${accuracy.toFixed(1)} %<br>
+    🏆 ランク: ${rank}<br><br>
+    ${advice}
+    <hr>
+    <p>おすすめタイピング教材はこちら（広告）</p>
+  `;
+}
+</script>
+
+</body>
+</html>
